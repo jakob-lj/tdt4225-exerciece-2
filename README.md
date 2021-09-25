@@ -26,6 +26,12 @@ This is not a security issue as the port is not shared outside the development c
     mysql -u root -p
 ```
 
+Now create the database used in the exercices:
+
+```mysql
+    CREATE DATABASE tdt4225
+```
+
 ### Running python
 
 Before you can start development in python. Initialize the virutal environment.
