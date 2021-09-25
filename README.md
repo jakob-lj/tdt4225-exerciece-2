@@ -2,6 +2,8 @@
 
 Using mysql on local machine as it's not enough machines for all students.
 
+Remember that the program expects to find the dataset at ../dataset/. The dataset can be found in the exercice description.
+
 Start by creating the docker container:
 
 ```bash
