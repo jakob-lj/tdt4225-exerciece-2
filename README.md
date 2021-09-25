@@ -4,6 +4,8 @@ Using mysql on local machine as it's not enough machines for all students.
 
 Remember that the program expects to find the dataset at ../dataset/. The dataset can be found in the exercice description.
 
+### Running the database and connect to terminal
+
 Start by creating the docker container:
 
 ```bash
@@ -23,3 +25,23 @@ This is not a security issue as the port is not shared outside the development c
 ```bash
     mysql -u root -p
 ```
+
+### Running python
+
+Before you can start development in python. Initialize the virutal environment.
+
+This requires python3 module venv to be installed
+
+```bash
+    python3 -m venv venv
+```
+
+The venv folder is in gitignore.
+
+Activate the environment with (mac)
+
+```bash
+    source venv/bin/activate
+```
+
+Now you should be able to run the python scripts.
