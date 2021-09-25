@@ -45,3 +45,9 @@ Activate the environment with (mac)
 ```
 
 Now you should be able to run the python scripts.
+
+Use -B in order to prevent creating **\_\_pycache\_\_**
+
+```bash
+    python3 -B main.py
+```
