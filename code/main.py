@@ -4,7 +4,7 @@ from DbConnector import DbConnector
 from DatabaseSetup import DatabaseSetup
 from Logger import Logger, LogLevel
 
-logger = Logger(LogLevel.DEBUG)
+logger = Logger(LogLevel.INFO)
 
 
 def main(dbConnector, databaseSetup):
@@ -23,6 +23,6 @@ if __name__ == '__main__':
         HOST="localhost", PASSWORD="password", USER="root", DATABASE="tdt4225", logger=logger)
 
     databaseSetup = DatabaseSetup(
-        cursor=dbConnector.cursor, logger=logger)
+        cursor=dbConnector.cursor, logger=logger, pruneOnStart=True)
 
     main(dbConnector, databaseSetup)

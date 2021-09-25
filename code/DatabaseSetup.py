@@ -2,17 +2,94 @@
 from tabulate import tabulate
 
 
+class DatabaseColumn:
+    def __init__(self, name, type):
+        self.name = name
+        self.type = type
+
+
+class DatabaseTable:
+    def __init__(self, name, columns):
+        self.name = name
+        self.columns = columns
+
+
 class DatabaseSetup:
-    def __init__(self, logger, cursor):
+    def __init__(self, logger, cursor, pruneOnStart=False):
         self.logger = logger
         self.cursor = cursor
+        self.pruneOnStart = pruneOnStart
+
+    def initTables(self):
+        self.logger.info("Creating tables")
+
+        createUserTable = DatabaseTable(
+            name="users", columns=[
+                DatabaseColumn("has_lables", "boolean"),
+            ])
+
+        createActivityTable = DatabaseTable(name="activity", columns=[
+            DatabaseColumn("user_id", "varchar(36)"),
+            DatabaseColumn("transportion_mode", "varchar(36)"),
+            DatabaseColumn("start_date_time", "timestamp"),
+            DatabaseColumn("end_date_time", "timestamp")
+        ])
+
+        createTrackingPointTable = DatabaseTable(
+            name="tracking_point", columns=[
+                DatabaseColumn("activity_id", "varchar(36)"),
+                DatabaseColumn("latitude", "double"),
+                DatabaseColumn("longitude", "double"),
+                DatabaseColumn("altitude", "integer"),
+                DatabaseColumn("date_days", "double"),
+                DatabaseColumn("date_times", "timestamp")
+            ])
+
+        tables = [createUserTable, createActivityTable,
+                  createTrackingPointTable]
+
+        for table in tables:
+
+            if (len(table.columns) > 0):
+
+                tableColumnsWrittenOut = ', '.join(
+                    ["%s %s" % (column.name, column.type) for column in table.columns])
+
+                createTableQuery = "CREATE TABLE %s (id varchar(36) primary key default (UUID()), %s)" % (
+                    table.name, tableColumnsWrittenOut)
+                self.logger.debug("Creating table with: %s" % createTableQuery)
+                self.cursor.execute(createTableQuery)
+
+            else:
+                pass  # table is not ready
+
+    def dropTables(self, tables):
+
+        self.logger.info("Dropping tables")
+
+        dropTableQuery = "DROP TABLE %s"
+
+        [self.cursor.execute(dropTableQuery % table) for table in tables]
 
     def setup(self):
-        self.logger.debug("Setting up database")
+        self.logger.info("Setting up database")
 
-        self.logger.debug("Getting tables already existing")
-        print(self.cursor.execute("SHOW TABLES"))
+        self.logger.info("Getting tables already existing")
+
+        self.cursor.execute("SHOW TABLES")
+
+        tablesExistsing = self.cursor.fetchall()
+
+        if (len(tablesExistsing) == 0):
+            self.initTables()
+        else:
+            if self.pruneOnStart:
+                self.dropTables(tablesExistsing)
+                self.initTables()
+            else:
+                logger.info(
+                    "Tables already exists, prune on start is set to False. Preceeding")
 
        # existingDatabases =
 
-       # self.logger.debug(existingDatabases)
+       # self.logger.info(existingDatabases)

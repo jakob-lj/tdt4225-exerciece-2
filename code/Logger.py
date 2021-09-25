@@ -2,8 +2,12 @@ import datetime
 
 
 def getLogLableByValue(level):
-    levels = ["ERROR", "WARNING", "INFO", "DEBUG"]
-    return levels[level]
+    levels = [
+        "ERROR",
+        "WARNING",
+        "INFO",
+        "DEBUG"]
+    return "[%s]" % levels[level]
 
 
 class LogLevel:
@@ -21,7 +25,7 @@ class Logger:
     def output(self, logLevel, messages):
         message = ' '.join([str(x) for x in messages])
         if (self.logLevel >= logLevel):
-            print("[%s] %s: %s" % (getLogLableByValue(
+            print("%-10s %s: %s" % (getLogLableByValue(
                 logLevel), datetime.datetime.now(), message))
 
     def debug(self, *message):
