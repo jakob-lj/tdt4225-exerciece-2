@@ -3,6 +3,8 @@
 from DbConnector import DbConnector
 from DatabaseSetup import DatabaseSetup
 from Logger import Logger, LogLevel
+from Reader import Reader
+from TrackPonitInsert import TrackPointInsertStub
 
 logger = Logger(LogLevel.INFO)
 
@@ -12,8 +14,6 @@ def main(dbConnector, databaseSetup):
     logger.info("Welcome to TDT4225 exercice 2")
 
     databaseSetup.setup()
-
-    dbConnector.close_connection()
 
 
 if __name__ == '__main__':
@@ -25,4 +25,12 @@ if __name__ == '__main__':
     databaseSetup = DatabaseSetup(
         cursor=dbConnector.cursor, logger=logger, pruneOnStart=True)
 
-    main(dbConnector, databaseSetup)
+    trackPointInserter = TrackPointInsertStub()
+
+    transformLayer = Reader(insertService=trackPointInserter)
+
+    transformLayer.readFiles()
+
+    dbConnector.close_connection()
+
+   # main(dbConnector, databaseSetup)
