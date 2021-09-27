@@ -65,7 +65,8 @@ class DatabaseSetup:
 
     def dropTables(self, tables):
 
-        self.logger.info("Dropping tables")
+        self.logger.info("Dropping tables: %s" %
+                         ', '.join([x[0] for x in tables]))
 
         dropTableQuery = "DROP TABLE %s"
 
