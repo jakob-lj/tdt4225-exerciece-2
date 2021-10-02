@@ -1,17 +1,18 @@
 
 from tabulate import tabulate
+from typing import List
 
 
 class DatabaseColumn:
     def __init__(self, name, type):
-        self.name = name
-        self.type = type
+        self.name: String = name
+        self.type: String = type
 
 
 class DatabaseTable:
     def __init__(self, name, columns):
-        self.name = name
-        self.columns = columns
+        self.name: String = name
+        self.columns: List[DatabaseColumn] = columns
 
 
 class DatabaseSetup:
@@ -26,6 +27,7 @@ class DatabaseSetup:
         createUserTable = DatabaseTable(
             name="users", columns=[
                 DatabaseColumn("has_lables", "boolean"),
+                DatabaseColumn("text_identifier", "varchar(4)")
             ])
 
         createActivityTable = DatabaseTable(name="activity", columns=[
