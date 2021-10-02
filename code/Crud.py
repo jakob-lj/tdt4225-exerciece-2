@@ -5,7 +5,7 @@ from Types import InsertRequest
 
 
 class Crud(ABC):
-    def __init__(self, table, cursor, dbConnection, logger, cls=None):
+    def __init__(self, table, cursor, dbConnection, logger, activate, cls=None):
         self.tableName = table.name
         self.table = table
         self.cursor = cursor
@@ -14,6 +14,7 @@ class Crud(ABC):
         self.dbConnection = dbConnection
         self.logger = logger
         self.cls = cls
+        self.activated = activate
 
     @abstractclassmethod
     def serialize(cls, data):
@@ -41,16 +42,17 @@ class Crud(ABC):
     """
 
     def insert(self, data, returnData=True):
-        id = str(uuid.uuid4())
-        columns = ','.join(['id'] + [ir.column.name for ir in data])
-        values = ','.join(["\'%s\'" % id] + [self.prepearValue(ir)
-                          for ir in data])
+        if (self.activated):
+            id = str(uuid.uuid4())
+            columns = ','.join(['id'] + [ir.column.name for ir in data])
+            values = ','.join(["\'%s\'" % id] + [self.prepearValue(ir)
+                                                 for ir in data])
 
-        self.logger.debug("Inserting: insert into %s (%s) values (%s)" % (
-            self.tableName, columns,  values))
+            self.logger.debug("Inserting: insert into %s (%s) values (%s)" % (
+                self.tableName, columns,  values))
 
-        result = self.cursor.execute(
-            "insert into %s(%s) values (%s)" % (self.tableName, columns, values))
-        cr = self.dbConnection.commit()
-        if(returnData):
-            return self.get(id)
+            result = self.cursor.execute(
+                "insert into %s(%s) values (%s)" % (self.tableName, columns, values))
+            cr = self.dbConnection.commit()
+            if(returnData):
+                return self.get(id)

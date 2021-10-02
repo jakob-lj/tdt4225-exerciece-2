@@ -7,11 +7,11 @@ userColumn, transportModeColumn, startColumn, endColumn = DatabaseColumn("user_i
 
 class ActivityService(Crud):
 
-    def __init__(self, cursor: any, dbConnection, logger):
+    def __init__(self, cursor: any, dbConnection, logger, activate):
         Crud.__init__(self, DatabaseTable(name="activity", columns=[
             userColumn, transportModeColumn, startColumn, endColumn
         ]),
-            cursor=cursor, dbConnection=dbConnection, logger=logger)
+            cursor=cursor, dbConnection=dbConnection, logger=logger, activate=activate)
         self.activities = []
         self.logger = logger
 

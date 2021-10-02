@@ -11,12 +11,15 @@ from TrackingPointService import TrackingPointServiceStub
 
 logger = Logger(LogLevel.INFO)
 
+runReadAndInsertServices = True
+activateInsertService = False
 
-def main(dbConnector, databaseSetup, transformLayer, trackPointInserter, userService, activityService, insertData=False):
+
+def main(dbConnector, databaseSetup, transformLayer, trackPointInserter, userService, activityService, runServices=False):
 
     logger.info("Welcome to TDT4225 exercice 2")
 
-    if (insertData):
+    if (runServices):
         databaseSetup.setup()
 
         userService.init()
@@ -34,16 +37,16 @@ if __name__ == '__main__':
         HOST="localhost", PASSWORD="password", USER="root", DATABASE="tdt4225", logger=logger)
 
     userService = UserService(
-        dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger)
+        dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger, activate=activateInsertService)
 
     activityService = ActivityService(
-        dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger)
+        dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger, activate=activateInsertService)
 
     trackingPointService = TrackingPointServiceStub(
-        dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger)
+        dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger, activate=activateInsertService)
 
     trackPointInserter = TrackPointInsert(
-        cursor=dbConnector.cursor, userService=userService, activityService=activityService, trackingPointService=trackingPointService)
+        cursor=dbConnector.cursor, userService=userService, activityService=activityService, trackingPointService=trackingPointService, insertServicesActivated=activateInsertService)
 
     transformLayer = Reader(insertService=trackPointInserter)
 
@@ -56,6 +59,6 @@ if __name__ == '__main__':
         cursor=dbConnector.cursor, logger=logger, pruneOnStart=False)
 
     main(dbConnector, databaseSetup, transformLayer,
-         trackPointInserter, userService, activityService)
+         trackPointInserter, userService, activityService, runReadAndInsertServices)
 
     dbConnector.close_connection()

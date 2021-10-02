@@ -8,12 +8,12 @@ hasLablesColumn, textIdenfifierColumn = DatabaseColumn(
 
 class UserService(Crud):
 
-    def __init__(self, cursor: any, dbConnection, logger):
+    def __init__(self, cursor: any, dbConnection, logger, activate):
         Crud.__init__(self, DatabaseTable(
             name="users", columns=[
                 hasLablesColumn, textIdenfifierColumn
             ]),
-            cursor=cursor, dbConnection=dbConnection, logger=logger)
+            cursor=cursor, dbConnection=dbConnection, logger=logger, activate=activate)
         self.users = []
         self.logger = logger
 

@@ -6,7 +6,7 @@ activityColumn, latitudeColumn, longitudeColumn, altitudeColumn, dateTimesColumn
 
 
 class TrackingPointServiceStub:
-    def __init__(self, cursor: any, dbConnection, logger):
+    def __init__(self, cursor: any, dbConnection, logger, activate):
         self.table = DatabaseTable("tracking_point_stub", columns=[])
         self.logger = logger
 
@@ -15,12 +15,12 @@ class TrackingPointServiceStub:
 
 
 class TrackingPointService(Crud):
-    def __init__(self, cursor: any, dbConnection, logger):
+    def __init__(self, cursor: any, dbConnection, logger, activate):
         Crud.__init__(self, DatabaseTable(
             name="tracking_point", columns=[
                 activityColumn, latitudeColumn, longitudeColumn, altitudeColumn, dateTimesColumn
             ]),
-            cursor=cursor, dbConnection=dbConnection, logger=logger)
+            cursor=cursor, dbConnection=dbConnection, logger=logger, activate=activate)
 
         self.logger = logger
 
