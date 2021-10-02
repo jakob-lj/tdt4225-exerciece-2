@@ -96,3 +96,4 @@ class PltLine:
 
 class Environment(Enum):
     DEV = "DEV"
+    PROD = "PROD"

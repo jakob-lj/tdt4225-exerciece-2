@@ -8,7 +8,7 @@ HEADER_SIZE = 6
 
 
 class Reader:
-    def __init__(self, insertService, environment=Environment.DEV, linesThreshold=2500):
+    def __init__(self, insertService, environment=Environment.PROD, linesThreshold=2500):
         self.insertService = insertService
         self.environment = environment
         self.linesTreshhold = linesThreshold + HEADER_SIZE
@@ -43,18 +43,23 @@ class Reader:
         #    "../dataset/dataset/Data/000/Trajectory/20081023025304.plt", "r").readlines()
         # print(data)
         finished000 = False
-
+        labels = None
         for root, dir, files in os.walk("../dataset"):
-            if (not "000" in root and self.environment):  # skipp all other than 000 in development
+            # skipp all other than 000 in development
+            if (not "000" in root and self.environment == Environment.DEV):
                 continue
             else:
+                if("labels.txt" in files):
+                    labels = open("labels.txt")
                 if ("Trajectory" in root):
                     for file in files:
                         activity = self.getActivityFromFile(file)
                         currentUser = self.getUserFromPath(root)
-                        self.openFile(root + "/" + file, currentUser, activity)
-                else:
-                    continue
+                        if (labels != None):
+                            # TODO: Calculate if activity had label
+                            pass
+                        #self.openFile(root + "/" + file, currentUser, activity)
+                        labels = None
             # for file in files:
                 # print(file)
             # sself.insertService.insertPltFile(PltFile(fileName = ))
