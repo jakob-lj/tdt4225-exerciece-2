@@ -1,6 +1,7 @@
 import os
 from Types import PltFile, Environment
 from Types import PltLine
+from Types import UserRequest
 
 LINES_TO_SIZE_RATIO = 62.4
 HEADER_SIZE = 6
@@ -35,7 +36,7 @@ class Reader:
             ) for x in splittedLines]
 
             self.insertService.insertTrackingPointsAndActivityForUser(
-                currentUser, activity, parsedLines)
+                UserRequest(textIdentifier=currentUser, hasLables=False), activity, parsedLines)
 
     def readFiles(self):
         # data = open(

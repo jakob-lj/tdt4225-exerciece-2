@@ -1,34 +1,20 @@
 
 from tabulate import tabulate
 from typing import List
-
-
-class DatabaseColumn:
-    def __init__(self, name, type):
-        self.name: String = name
-        self.type: String = type
-
-
-class DatabaseTable:
-    def __init__(self, name, columns):
-        self.name: String = name
-        self.columns: List[DatabaseColumn] = columns
+from Types import DatabaseTable, DatabaseColumn
 
 
 class DatabaseSetup:
-    def __init__(self, logger, cursor, pruneOnStart=False):
+    def __init__(self, logger, userService, cursor, pruneOnStart=False):
         self.logger = logger
         self.cursor = cursor
         self.pruneOnStart = pruneOnStart
+        self.userService = userService
 
     def initTables(self):
         self.logger.info("Creating tables")
 
-        createUserTable = DatabaseTable(
-            name="users", columns=[
-                DatabaseColumn("has_lables", "boolean"),
-                DatabaseColumn("text_identifier", "varchar(4)")
-            ])
+        createUserTable = self.userService.table
 
         createActivityTable = DatabaseTable(name="activity", columns=[
             DatabaseColumn("user_id", "varchar(36)"),
