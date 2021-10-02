@@ -6,6 +6,7 @@ from Logger import Logger, LogLevel
 from Reader import Reader
 from TrackPonitInsert import TrackPointInsert
 from UserService import UserService
+from ActivityService import ActivityService
 
 logger = Logger(LogLevel.DEBUG)
 
@@ -29,13 +30,17 @@ if __name__ == '__main__':
     userService = UserService(
         dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger)
 
+    activityService = ActivityService(
+        dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger)
+
     trackPointInserter = TrackPointInsert(
-        cursor=dbConnector.cursor, userService=userService)
+        cursor=dbConnector.cursor, userService=userService, activityService=activityService)
 
     transformLayer = Reader(insertService=trackPointInserter)
 
     databaseSetup = DatabaseSetup(
         userService=userService,
+        activityService=activityService,
         cursor=dbConnector.cursor, logger=logger, pruneOnStart=True)
     main(dbConnector, databaseSetup, transformLayer, trackPointInserter)
 

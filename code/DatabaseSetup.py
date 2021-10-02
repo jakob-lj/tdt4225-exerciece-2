@@ -5,23 +5,19 @@ from Types import DatabaseTable, DatabaseColumn
 
 
 class DatabaseSetup:
-    def __init__(self, logger, userService, cursor, pruneOnStart=False):
+    def __init__(self, logger, userService, activityService, cursor, pruneOnStart=False):
         self.logger = logger
         self.cursor = cursor
         self.pruneOnStart = pruneOnStart
         self.userService = userService
+        self.activityService = activityService
 
     def initTables(self):
         self.logger.info("Creating tables")
 
         createUserTable = self.userService.table
 
-        createActivityTable = DatabaseTable(name="activity", columns=[
-            DatabaseColumn("user_id", "varchar(36)"),
-            DatabaseColumn("transportion_mode", "varchar(36)"),
-            DatabaseColumn("start_date_time", "timestamp"),
-            DatabaseColumn("end_date_time", "timestamp")
-        ])
+        createActivityTable = self.activityService.table
 
         createTrackingPointTable = DatabaseTable(
             name="tracking_point", columns=[

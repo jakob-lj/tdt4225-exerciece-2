@@ -2,6 +2,23 @@ from enum import Enum
 import datetime
 
 
+class Activity:
+    def __init__(self, id, userId, transportMode, startDateTime, endDateTime):
+        self.id = id
+        self.userId = userId
+        self.transportMode = transportMode
+        self.startDateTime = startDateTime
+        self.endDateTime = endDateTime
+
+
+class ActivityRequest:
+    def __init__(self, userId, transportMode, startDateTime, endDateTime):
+        self.userId = userId
+        self.transportMode = transportMode
+        self.startDateTime = startDateTime
+        self.endDateTime = endDateTime
+
+
 class User:
     def __init__(self, id, textIdentifier, hasLables):
         self.id: String = id

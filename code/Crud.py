@@ -31,7 +31,7 @@ class Crud(ABC):
         return self.cursor.fetchall()
 
     def prepearValue(self, inputRequest):
-        if("varchar" in inputRequest.column.type or "text" in inputRequest.column.type):
+        if("varchar" in inputRequest.column.type.lower() or "text" in inputRequest.column.type.lower() or "timestamp" in inputRequest.column.type.lower()):
             return "\'%s\'" % inputRequest.value
         else:
             return str(inputRequest.value)
@@ -46,10 +46,11 @@ class Crud(ABC):
         values = ','.join(["\'%s\'" % id] + [self.prepearValue(ir)
                           for ir in data])
 
-        self.logger.debug("Inserting", values)
+        self.logger.debug("Inserting: insert into %s (%s) values (%s)" % (
+            self.tableName, columns,  values))
 
         result = self.cursor.execute(
-            "insert into users(%s) values (%s)" % (columns, values))
+            "insert into %s(%s) values (%s)" % (self.tableName, columns, values))
         cr = self.dbConnection.commit()
 
         return self.get(id)
