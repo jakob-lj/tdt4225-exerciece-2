@@ -5,12 +5,13 @@ from Types import DatabaseTable, DatabaseColumn
 
 
 class DatabaseSetup:
-    def __init__(self, logger, userService, activityService, cursor, pruneOnStart=False):
+    def __init__(self, logger, userService, activityService, trackingPointService, cursor, pruneOnStart=False):
         self.logger = logger
         self.cursor = cursor
         self.pruneOnStart = pruneOnStart
         self.userService = userService
         self.activityService = activityService
+        self.trackingPointService = trackingPointService
 
     def initTables(self):
         self.logger.info("Creating tables")
@@ -19,15 +20,7 @@ class DatabaseSetup:
 
         createActivityTable = self.activityService.table
 
-        createTrackingPointTable = DatabaseTable(
-            name="tracking_point", columns=[
-                DatabaseColumn("activity_id", "varchar(36)"),
-                DatabaseColumn("latitude", "double"),
-                DatabaseColumn("longitude", "double"),
-                DatabaseColumn("altitude", "integer"),
-                DatabaseColumn("date_days", "double"),
-                DatabaseColumn("date_times", "timestamp")
-            ])
+        createTrackingPointTable = self.trackingPointService.table
 
         tables = [createUserTable, createActivityTable,
                   createTrackingPointTable]
@@ -72,7 +65,7 @@ class DatabaseSetup:
                 self.dropTables(tablesExistsing)
                 self.initTables()
             else:
-                logger.info(
+                self.logger.info(
                     "Tables already exists, prune on start is set to False. Preceeding")
 
        # existingDatabases =

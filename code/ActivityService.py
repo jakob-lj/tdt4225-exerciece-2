@@ -12,8 +12,11 @@ class ActivityService(Crud):
             userColumn, transportModeColumn, startColumn, endColumn
         ]),
             cursor=cursor, dbConnection=dbConnection, logger=logger)
-        self.activities = self.fetchActivities()
+        self.activities = []
         self.logger = logger
+
+    def init(self):
+        self.activities = self.fetchActivities()
 
     def fetchActivities(self):
         return self.serializeArray(self.getAll())
@@ -46,7 +49,7 @@ class ActivityService(Crud):
     def getOrCreate(self, activity: ActivityRequest):
         inMemActivity = self.getInMemory(activity)
         if (inMemActivity == None):
-            self.logger.debug("Activity does not exist, creating")
+            self.logger.info("Activity does not exist, creating")
             return self.create(activity)
-        self.logger.debug("Activity exists in cache")
+        self.logger.info("Activity exists in cache")
         return inMemActivity

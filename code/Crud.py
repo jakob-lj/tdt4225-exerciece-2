@@ -40,7 +40,7 @@ class Crud(ABC):
         Using pythons uuid4 as mysql uuid sucks and does not use uuid 4....
     """
 
-    def insert(self, data):
+    def insert(self, data, returnData=True):
         id = str(uuid.uuid4())
         columns = ','.join(['id'] + [ir.column.name for ir in data])
         values = ','.join(["\'%s\'" % id] + [self.prepearValue(ir)
@@ -52,5 +52,5 @@ class Crud(ABC):
         result = self.cursor.execute(
             "insert into %s(%s) values (%s)" % (self.tableName, columns, values))
         cr = self.dbConnection.commit()
-
-        return self.get(id)
+        if(returnData):
+            return self.get(id)

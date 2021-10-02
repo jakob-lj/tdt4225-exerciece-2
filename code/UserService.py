@@ -14,8 +14,11 @@ class UserService(Crud):
                 hasLablesColumn, textIdenfifierColumn
             ]),
             cursor=cursor, dbConnection=dbConnection, logger=logger)
-        self.users = self.fetchUsers()
+        self.users = []
         self.logger = logger
+
+    def init(self):
+        self.users = self.fetchUsers()
 
     def fetchUsers(self):
         return self.serializeArray(self.getAll())
@@ -42,7 +45,7 @@ class UserService(Crud):
     def getOrCreate(self, user: UserRequest):
         inMemUser = self.getInMemory(user)
         if (inMemUser == None):
-            self.logger.debug("User does not exist, creating")
+            self.logger.info("User does not exist, creating")
             return self.create(user)
-        self.logger.debug("User exists in cache")
+        self.logger.info("User exists in cache")
         return inMemUser

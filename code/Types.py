@@ -19,6 +19,25 @@ class ActivityRequest:
         self.endDateTime = endDateTime
 
 
+class TrackingPoint:
+    def __init__(self, id, activityId, latitude, longitude, altitude, timestamp):
+        self.id = id
+        self.activityId = activityId
+        self.latitude = latitude
+        self.longitude = longitude
+        self.altitude = altitude
+        self.timestamp = timestamp
+
+
+class TrackingPointRequest:
+    def __init__(self, activityId, latitude, longitude, altitude, timestamp):
+        self.activityId = activityId
+        self.latitude = latitude
+        self.longitude = longitude
+        self.altitude = altitude
+        self.timestamp = timestamp
+
+
 class User:
     def __init__(self, id, textIdentifier, hasLables):
         self.id: String = id
