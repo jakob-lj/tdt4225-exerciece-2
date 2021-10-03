@@ -9,13 +9,16 @@ HEADER_SIZE = 6
 
 
 class Reader:
-    def __init__(self, insertService, environment=Environment.DEV, linesThreshold=2500):
+    def __init__(self, insertService, environment=Environment.PROD, linesThreshold=2500):
         self.insertService = insertService
         self.environment = environment
         self.linesTreshhold = linesThreshold + HEADER_SIZE
         self.USER_INDEX = None
+        self.lastUser = None
+        self.labels = None
 
     def openFile(self, path, currentUser, activity, labels):
+
         size = os.stat(path).st_size
         # remove all files that should be outside the avarage of liens to size ratio
         if (size < LINES_TO_SIZE_RATIO*self.linesTreshhold * 2):
@@ -43,8 +46,6 @@ class Reader:
                     if (parsedLines[0].date == label['start'] and parsedLines[-1].date == label['end']):
                         currentLabel = label['label']
 
-            print(currentLabel)
-
             self.insertService.insertTrackingPointsAndActivityForUser(
                 UserRequest(textIdentifier=currentUser, hasLables=False), activity, parsedLines)
 
@@ -59,13 +60,11 @@ class Reader:
             if (not "179" in root and self.environment == Environment.DEV):
                 continue
             else:
-                print("FOUND LABELS")
                 if("labels.txt" in files):
-
                     fileData = open(root + "/labels.txt")
                     labelsInput = [line.strip()
                                    for line in fileData.readlines()]
-                    labels = []
+                    self.labels = []
                     for label in labelsInput[1:]:
                         labelData = [l.strip() for l in label.split()]
                         startDate = getDateFromDateAndTimeString(
@@ -73,17 +72,20 @@ class Reader:
                         endDate = getDateFromDateAndTimeString(
                             labelData[2], labelData[3])
                         labelString = labelData[4]
-                        labels.append(
+                        self.labels.append(
                             {"start": startDate, "end": endDate, "label": labelString})
 
                 if ("Trajectory" in root):
-                    print("FOUND TRAJECTORY")
+                    #print("starting with labels", self.labels)
                     for file in files:
                         activity = self.getActivityFromFile(file)
                         currentUser = self.getUserFromPath(root)
                         self.openFile(root + "/" + file,
-                                      currentUser, activity, labels)
-                        labels = None
+                                      currentUser, activity, self.labels)
+                        if (self.lastUser != currentUser):
+                            if (self.lastUser != None):
+                                self.labels = None
+                            self.lastUser = currentUser
             # for file in files:
                 # print(file)
             # sself.insertService.insertPltFile(PltFile(fileName = ))
