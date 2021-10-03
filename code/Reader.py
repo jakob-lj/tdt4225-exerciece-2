@@ -47,7 +47,7 @@ class Reader:
                         currentLabel = label['label']
 
             self.insertService.insertTrackingPointsAndActivityForUser(
-                UserRequest(textIdentifier=currentUser, hasLables=False), activity, parsedLines)
+                UserRequest(textIdentifier=currentUser, hasLables=labels != None), activity, parsedLines, currentLabel)
 
     def readFiles(self):
         # data = open(

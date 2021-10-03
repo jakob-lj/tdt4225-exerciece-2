@@ -14,7 +14,7 @@ class TrackPointInsertStub:
     def insertPltFile(self, file):
         print("Inserting file %s" % file.fileName)
 
-    def insertTrackingPointsAndActivityForUser(self, user, activity, trakcingPoints):
+    def insertTrackingPointsAndActivityForUser(self, user, activity, trakcingPoints, currentLabel):
         # print(trakcingPoints)
         print(user, activity)
 
@@ -30,8 +30,13 @@ class TrackPointInsert:
         self.insertServicesActivated = insertServicesActivated
 
     # based on the dataset structure, this will always be a new activity
-    def insertTrackingPointsAndActivityForUser(self, user, activity, trackingPoint):
+    def insertTrackingPointsAndActivityForUser(self, user, activity, trackingPoint, currentLabel):
+        tm = ""
+        if (currentLabel != None):
+            tm = currentLabel
+
         if (self.insertServicesActivated):
+
             userObj = self.userService.getOrCreate(user)
             activityRequest = ActivityRequest(
                 startDateTime=trackingPoint[0].date, endDateTime=trackingPoint[-1].date, transportMode="", userId=userObj.id)
