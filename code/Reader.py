@@ -9,7 +9,7 @@ HEADER_SIZE = 6
 
 
 class Reader:
-    def __init__(self, insertService, environment=Environment.PROD, linesThreshold=2500):
+    def __init__(self, insertService, environment=Environment.DEV, linesThreshold=2500):
         self.insertService = insertService
         self.environment = environment
         self.linesTreshhold = linesThreshold + HEADER_SIZE

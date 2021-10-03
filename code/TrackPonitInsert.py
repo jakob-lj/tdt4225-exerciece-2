@@ -46,12 +46,14 @@ class TrackPointInsert:
     def insertActivityAndTranckingPoints(self, userReference, activity, tranckingPoints):
         if (self.insertServicesActivated):
             activityObj = self.activityService.getOrCreate(activity)
+            trackingPointsStore = []
             for trackingPoint in tranckingPoints:
-                self.trackingPointService.create(trackingPointRequest=TrackingPointRequest(
+                trackingPointsStore.append(TrackingPointRequest(
                     activityId=activityObj.id,
                     latitude=trackingPoint.latitude,
                     longitude=trackingPoint.longitude,
                     altitude=trackingPoint.altitude,
                     timestamp=trackingPoint.date
                 ))
+            self.trackingPointService.createBatch(trackingPointsStore)
             return "ok"

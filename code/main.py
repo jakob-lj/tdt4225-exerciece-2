@@ -7,12 +7,13 @@ from Reader import Reader
 from TrackPonitInsert import TrackPointInsert
 from UserService import UserService
 from ActivityService import ActivityService
-from TrackingPointService import TrackingPointServiceStub
+from TrackingPointService import TrackingPointServiceStub, TrackingPointService
 
 logger = Logger(LogLevel.INFO)
 
 runReadAndInsertServices = True
-activateInsertService = False
+activateInsertService = True
+pruneOnStart = True
 
 
 def main(dbConnector, databaseSetup, transformLayer, trackPointInserter, userService, activityService, runServices=False):
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     activityService = ActivityService(
         dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger, activate=activateInsertService)
 
-    trackingPointService = TrackingPointServiceStub(
+    trackingPointService = TrackingPointService(
         dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger, activate=activateInsertService)
 
     trackPointInserter = TrackPointInsert(
@@ -56,7 +57,7 @@ if __name__ == '__main__':
         userService=userService,
         activityService=activityService,
         trackingPointService=trackingPointService,
-        cursor=dbConnector.cursor, logger=logger, pruneOnStart=False)
+        cursor=dbConnector.cursor, logger=logger, pruneOnStart=pruneOnStart)
 
     main(dbConnector, databaseSetup, transformLayer,
          trackPointInserter, userService, activityService, runReadAndInsertServices)

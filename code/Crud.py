@@ -56,3 +56,17 @@ class Crud(ABC):
             cr = self.dbConnection.commit()
             if(returnData):
                 return self.get(id)
+
+    def insertBatchTrackingPoints(self, data):
+        if (self.activated):
+            columns = ','.join(
+                ['activity_id', 'latitude', 'longitude', 'altitude', 'date_times'])
+            values = []
+            for tp in data:
+                values.append(
+                    "(" + ','.join(["'%s'" % tp.activityId, "'%s'" % tp.latitude, "'%s'" % tp.longitude, tp.altitude, "'%s'" % tp.timestamp]) + ")")
+
+            insertvalues = ','.join(values)
+            result = self.cursor.execute(
+                "insert into tracking_point(%s) values %s" % (columns, insertvalues))
+            cr = self.dbConnection.commit()

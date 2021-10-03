@@ -10,6 +10,9 @@ class TrackingPointServiceStub:
         self.table = DatabaseTable("tracking_point_stub", columns=[])
         self.logger = logger
 
+    def createBatch(self, trackingPointRequests):
+        print("CREATING BATCH STUB")
+
     def create(self, trackingPointRequest: TrackingPointRequest):
         self.logger.debug("Stub tracking point service does not create")
 
@@ -54,6 +57,10 @@ class TrackingPointService(Crud):
                           value=trackingPointRequest.timestamp),
         ], returnData=False)
         return tp
+
+    # List<TrackingPointRequest>
+    def createBatch(self, trackingPoints):
+        self.insertBatchTrackingPoints(trackingPoints)
 
     def getOrCreate(self, trackingPointRequest: TrackingPointRequest):
         return self.create(trackingPointRequest)
