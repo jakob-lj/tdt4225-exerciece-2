@@ -8,6 +8,7 @@ from TrackPonitInsert import TrackPointInsert
 from UserService import UserService
 from ActivityService import ActivityService
 from TrackingPointService import TrackingPointServiceStub, TrackingPointService
+from TaskRunner import TaskRunnerStub
 
 logger = Logger(LogLevel.INFO)
 
@@ -16,7 +17,7 @@ activateInsertService = True
 pruneOnStart = True
 
 
-def main(dbConnector, databaseSetup, transformLayer, trackPointInserter, userService, activityService, runServices=False):
+def main(dbConnector, databaseSetup, transformLayer, trackPointInserter, userService, activityService, taskRunner, runServices=False):
 
     logger.info("Welcome to TDT4225 exercice 2")
 
@@ -30,6 +31,8 @@ def main(dbConnector, databaseSetup, transformLayer, trackPointInserter, userSer
         dbConnector.db_connection.commit()
 
         transformLayer.readFiles()
+
+    taskRunner.listen()
 
 
 if __name__ == '__main__':
@@ -46,8 +49,10 @@ if __name__ == '__main__':
     trackingPointService = TrackingPointService(
         dbConnector.cursor, dbConnection=dbConnector.db_connection, logger=logger, activate=activateInsertService)
 
+    taskRunner = TaskRunnerStub()
+
     trackPointInserter = TrackPointInsert(
-        cursor=dbConnector.cursor, userService=userService, activityService=activityService, trackingPointService=trackingPointService, insertServicesActivated=activateInsertService)
+        cursor=dbConnector.cursor, userService=userService, activityService=activityService, trackingPointService=trackingPointService, insertServicesActivated=activateInsertService, taskRunner=taskRunner)
 
     transformLayer = Reader(insertService=trackPointInserter)
 
@@ -60,6 +65,6 @@ if __name__ == '__main__':
         cursor=dbConnector.cursor, logger=logger, pruneOnStart=pruneOnStart)
 
     main(dbConnector, databaseSetup, transformLayer,
-         trackPointInserter, userService, activityService, runReadAndInsertServices)
+         trackPointInserter, userService, activityService, taskRunner, runReadAndInsertServices)
 
     dbConnector.close_connection()
